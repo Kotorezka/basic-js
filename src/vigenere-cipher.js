@@ -1,13 +1,60 @@
 const CustomError = require("../extensions/custom-error");
 
 class VigenereCipheringMachine {
-  encrypt() {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
+  constructor(directReverse) {
+    this.directReverse = directReverse === false ? 'reverse' : 'direct';
+  }
+  encrypt(message, key) {
+    
+    if(!message || !key) throw new Error();
+
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let result = "";
+
+      message = message.toUpperCase();
+      key = key.toUpperCase();
+
+     let a = 0;
+     const strAlphabet = alphabet.length;
+
+      for (let i = 0; i < message.length; i++) {
+         if(alphabet.indexOf(message[i]) < 0) {
+            result += message[i];
+          a ++;
+
+     } else {
+        const MessageLetterIndex = alphabet.indexOf(message[i]);
+        const KeyLetterIndex = alphabet.indexOf(key[(i - a) % key.length]);
+        result += alphabet.charAt((MessageLetterIndex + KeyLetterIndex) % strAlphabet);
+        }
+    }
+    return (this.directReverse === 'reverse') ? result.split('').reverse().join('') : result;
   }    
-  decrypt() {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
+  decrypt(encryptedMessage, key) {
+    if(!encryptedMessage || !key) throw new Error(); 
+
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let result = "";
+
+      encryptedMessage = encryptedMessage.toUpperCase();
+      key = key.toUpperCase();
+  
+      let a = 0;
+    const strAlphabet = alphabet.length;
+
+      for (let i = 0; i < encryptedMessage.length; i++) {
+        if(alphabet.indexOf(encryptedMessage[i]) < 0) {
+            result += encryptedMessage[i];
+            a++;
+
+        } else {
+            const MessageLetterIndex = alphabet.indexOf(encryptedMessage[i]);
+            const KeyLetterIndex = alphabet.indexOf(key[(i - a) % key.length]);
+            result += alphabet.charAt(((MessageLetterIndex + strAlphabet) - KeyLetterIndex) % strAlphabet);
+        }
+    }
+    return (this.directReverse === 'reverse') ? result.split('').reverse().join('') : result;
+
   }
 }
 
